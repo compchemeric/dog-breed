@@ -43,7 +43,7 @@
   formData.append("file", file);
 
   try {
-    const res = await fetch("https://dog-breed-7qbc.onrender.com", {
+    const res = await fetch("https://dog-breed-7qbc.onrender.com/predict", {
       method: "POST",
       body: formData,
     });
