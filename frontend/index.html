@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dog Breed Detector</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    img { max-width: 300px; margin-top: 1rem; display: block; }
+    #response { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>🐶 Dog Breed Predictor</h1>
+
+  <input type="file" id="fileInput" accept="image/*"/>
+  <img id="preview" src="#" alt="Image preview" style="display: none;" />
+  <div id="response"></div>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const preview = document.getElementById("preview");
+    const responseDiv = document.getElementById("response");
+
+    fileInput.addEventListener("change", async () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  // Reset UI
+  preview.style.display = "none";
+  responseDiv.innerHTML = "⏳ Sending request...";
+
+  // Show image preview
+  const reader = new FileReader();
+  reader.onload = () => {
+    preview.src = reader.result;
+    preview.style.display = "block";
+  };
+  reader.readAsDataURL(file);
+
+  // Send to backend
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const res = await fetch("http://localhost:8000/predict", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) throw new Error(`Server error: ${res.status}`);
+    const data = await res.json();
+
+    // ✅ NEW FORMAT HANDLING
+    if (data.predictions && Array.isArray(data.predictions)) {
+      responseDiv.innerHTML = "<strong>Predictions:</strong><ul>";
+      data.predictions.forEach(pred => {
+        responseDiv.innerHTML += `
+          <li>🐶 <strong>${pred.breed}</strong> — ${(pred.confidence * 100).toFixed(1)}%</li>
+        `;
+      });
+      responseDiv.innerHTML += "</ul>";
+    } else {
+      throw new Error("Unexpected response format");
+    }
+  } catch (err) {
+    console.error(err);
+    responseDiv.innerHTML = `❌ Error: ${err.message}`;
+  }
+});
+  </script>
+</body>
+</html>
