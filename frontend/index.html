@@ -11,7 +11,7 @@
   </style>
 </head>
 <body>
-  <h1>🐶 Dog Breed Predictor</h1>
+  <h1>🐶 Erics Dog Breed Predictor UI</h1>
 
   <input type="file" id="fileInput" accept="image/*"/>
   <img id="preview" src="#" alt="Image preview" style="display: none;" />
@@ -69,5 +69,29 @@
   }
 });
   </script>
+
+<hr />
+<div id="info-box" style="
+  font-size: 0.9rem;
+  color: #444;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+">
+  <p>
+    🧠 Powered by the 
+    <a href="https://huggingface.co/amaye15/ViT-Standford-Dogs" target="_blank">
+      ViT Stanford Dogs model
+    </a>
+    on Hugging Face.
+  </p>
+  <p>
+    🛠️ Built by <strong>@compchemeric</strong> — 
+    <a href="https://github.com/compchemeric/dog-breed" target="_blank">
+      View source on GitHub
+    </a>
+  </p>
+</div>
+
 </body>
 </html>
